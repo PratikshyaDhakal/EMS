@@ -1,12 +1,15 @@
-import { useState } from 'react'
-import './App.css'
+import { useState } from "react"
+import { Routes, Route } from "react-router-dom"
+import "./App.css"
+import Dashboard from "./pages/Dashboard"
+import LoginPage from "./pages/Login"
 
 function App() {
-
   return (
-    <div className="App">
-      
-    </div>
+    <Routes>
+      <Route exact path="/login" element={<LoginPage />} />
+      <Route exact path="/" element={<Dashboard />} />
+    </Routes>
   )
 }
 
