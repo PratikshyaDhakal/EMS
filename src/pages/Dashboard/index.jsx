@@ -1,4 +1,4 @@
-import { Card, Grid, CardContent, Typography, Box } from "@mui/material"
+import { Card, Grid, CardContent, Typography } from "@mui/material"
 import React from "react"
 import FilterListIcon from "@mui/icons-material/FilterList"
 import CustomLineChart from "../../components/Dashboard/LineChart"
@@ -16,7 +16,7 @@ const Dashboard = () => {
   return (
     <Grid container spacing={4} mt={1}>
       {stats.map((stat, idx) => (
-        <Grid item xs={3}>
+        <Grid item xs={3} key={stat.count + idx}>
           <Card height="170px">
             <CardContent>
               <Grid container>

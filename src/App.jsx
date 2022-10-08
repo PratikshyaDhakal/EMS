@@ -1,8 +1,10 @@
+import * as React from "react"
 import { Routes, Route } from "react-router-dom"
 import "./App.css"
 import AuthLayout from "./layouts/AuthLayout"
 import Dashboard from "./pages/Dashboard"
 import LoginPage from "./pages/Login"
+import UserPage from "./pages/User"
 
 function App() {
   return (
@@ -14,6 +16,15 @@ function App() {
         element={
           <AuthLayout>
             <Dashboard />
+          </AuthLayout>
+        }
+      />
+      <Route
+        exact
+        path="/users"
+        element={
+          <AuthLayout>
+            <UserPage />
           </AuthLayout>
         }
       />
