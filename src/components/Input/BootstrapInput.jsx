@@ -1,5 +1,6 @@
 import React from "react"
 import { TextField, Typography } from "@mui/material"
+import PropTypes from "prop-types"
 
 const BootstrapInput = ({ label, name, register, formState, ...props }) => {
   return (
@@ -22,6 +23,13 @@ const BootstrapInput = ({ label, name, register, formState, ...props }) => {
       )}
     </>
   )
+}
+
+BootstrapInput.propTypes = {
+  label: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  register: PropTypes.func.isRequired,
+  formState: PropTypes.object.isRequired,
 }
 
 export default BootstrapInput

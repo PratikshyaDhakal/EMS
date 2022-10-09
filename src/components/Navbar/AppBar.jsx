@@ -4,22 +4,43 @@ import Box from "@mui/material/Box"
 import Toolbar from "@mui/material/Toolbar"
 import Typography from "@mui/material/Typography"
 import Button from "@mui/material/Button"
-import IconButton from "@mui/material/IconButton"
-import MenuIcon from "@mui/icons-material/Menu"
 import LogoutIcon from "@mui/icons-material/Logout"
+import { UserContext } from "../../context/userContext"
+import { logout } from "../../services/localstorageService"
+import { useNavigate } from "react-router-dom"
 
 export default function DefaultAppBar() {
+  const navigate = useNavigate()
+  const { setCurrentUser } = React.useContext(UserContext)
+
+  const handleLogout = () => {
+    logout()
+    setCurrentUser(null)
+  }
+
+  //handler for dashboard
+  const handleDashboardRedirect = () => {
+    navigate("/")
+  }
+
+  //handle user redirect
+  const handleUserRedirect = () => {
+    navigate("/users")
+  }
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" onClick={handleDashboardRedirect}>
             EMS
           </Typography>
-          <Button color="inherit" endIcon={<LogoutIcon />}>
+          <Box component="div" sx={{ flexGrow: 1, textTransform: "none" }}>
+            <Button color="inherit" onClick={handleUserRedirect}>
+              Users
+            </Button>
+          </Box>
+          <Button color="inherit" endIcon={<LogoutIcon />} onClick={handleLogout}>
             Logout
           </Button>
         </Toolbar>

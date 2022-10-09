@@ -4,12 +4,17 @@ import FilterListIcon from "@mui/icons-material/FilterList"
 import CustomLineChart from "../../components/Dashboard/LineChart"
 import CustomPieChart from "../../components/Dashboard/PieChart"
 import { colors } from "../../theme/color"
+import {
+  userRegistrationByYear,
+  usersRegisteredByMonth,
+  userHourStat,
+} from "../../services/fakeUserStat"
 
 const stats = [
-  { filterApplied: 1, title: "Title", count: 16 },
-  { filterApplied: 1, title: "Title", count: 26 },
-  { filterApplied: 1, title: "Title", count: 41 },
-  { filterApplied: 1, title: "Title", count: 33 },
+  { filterApplied: 1, title: "Active", count: 16 },
+  { filterApplied: 1, title: "Pending", count: 26 },
+  { filterApplied: 1, title: "Blocked", count: 41 },
+  { filterApplied: 1, title: "New", count: 33 },
 ]
 
 const Dashboard = () => {
@@ -53,12 +58,12 @@ const Dashboard = () => {
 
       <Grid item xs={6}>
         <Card style={{ height: "350px" }}>
-          <CustomLineChart />
+          <CustomLineChart data={userHourStat} />
         </Card>
       </Grid>
       <Grid item xs={6}>
         <Card style={{ height: "350px" }}>
-          <CustomPieChart />
+          <CustomPieChart data={usersRegisteredByMonth} data1={userRegistrationByYear} />
         </Card>
       </Grid>
     </Grid>

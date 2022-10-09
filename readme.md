@@ -1,4 +1,5 @@
 # Employee Management System
+
 Simple EMS app with static data
 
 ## Installation
@@ -12,4 +13,13 @@ npm install
 /*Then run the project locally with cmd */
 npm run dev
 
+```
+
+## Default Login Credentials
+
+```json
+{
+  "identifier": "Admin",
+  "password": "Password1#"
+}
 ```

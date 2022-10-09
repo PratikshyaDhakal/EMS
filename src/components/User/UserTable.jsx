@@ -7,33 +7,13 @@ import TableContainer from "@mui/material/TableContainer"
 import TablePagination from "@mui/material/TablePagination"
 import TableRow from "@mui/material/TableRow"
 import Paper from "@mui/material/Paper"
+import { toast } from "react-hot-toast"
 import EnhancedTableToolbar from "./UserTableToolbar"
 import EnhancedTableHead from "./UserTableHeader"
-
-function createData(id, name, role, email) {
-  return {
-    id,
-    name,
-    role,
-    email,
-  }
-}
-
-const rows = [
-  createData(1, "John", "Admin", "johndoe@mail.com"),
-  createData(2, "Shayam", "Coordinator", "Shayamdoe@mail.com"),
-  createData(3, "Ram", "Manager", "Ramdoe@mail.com"),
-  createData(4, "Sita", "Normal_User", "Sitadoe@mail.com"),
-  createData(5, "Hari", "Admin", "Haridoe@mail.com"),
-  createData(6, "Gita", "Normal_User", "Gitadoe@mail.com"),
-  createData(7, "sagar", "Normal_User", "sagardoe@mail.com"),
-  createData(8, "Pratik", "Normal_User", "Pratikdoe@mail.com"),
-  createData(9, "cena", "Normal_User", "cenadoe@mail.com"),
-  createData(10, "Alina", "Normal_User", "Alinadoe@mail.com"),
-  createData(11, "gixxer", "Normal_User", "gixxerdoe@mail.com"),
-  createData(12, "dendi", "Normal_User", "dendidoe@mail.com"),
-  createData(13, "Sherpa", "Manager", "Sherpadoe@mail.com"),
-]
+import { deleteUser, getUsersFromDb } from "../../services/localstorageService"
+import DeleteSweepIcon from "@mui/icons-material/DeleteSweep"
+import { IconButton, Tooltip } from "@mui/material"
+import AddOrEditUser from "./AddOrEditUser"
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -51,8 +31,6 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy)
 }
 
-// This method is created for cross-browser compatibility, if you don't
-// need to support IE11, you can use Array.prototype.sort() directly
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index])
   stabilizedThis.sort((a, b) => {
@@ -69,7 +47,14 @@ export default function UsersTable() {
   const [order, setOrder] = React.useState("asc")
   const [orderBy, setOrderBy] = React.useState("calories")
   const [page, setPage] = React.useState(0)
+  const [users, setUsers] = React.useState([])
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
+  const [search, setSearch] = React.useState("")
+
+  //populate state with fake data on component mount
+  React.useEffect(() => {
+    setUsers(getUsersFromDb())
+  }, [])
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc"
@@ -86,23 +71,36 @@ export default function UsersTable() {
     setPage(0)
   }
 
-  //open dialog box on button click
-  const handleShowDialog = () => {}
+  //handler for users search
+  const handleSearch = (event) => {
+    setSearch(event.target.value)
+  }
+
+  //refresh data on user addition
+  const handleUserCreation = () => {
+    setUsers(getUsersFromDb())
+  }
+
+  const handleDelete = (row) => {
+    deleteUser(row)
+    setUsers(getUsersFromDb())
+    toast.success("User deleted!")
+  }
+
+  let filteredUsers = users
+  if (search) {
+    filteredUsers = users.filter((user) => user.name.toLowerCase().startsWith(search.toLowerCase()))
+  }
 
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar onUserAdd={handleShowDialog} />
+        <EnhancedTableToolbar onSearch={handleSearch} onUserAdd={handleUserCreation} />
         <TableContainer>
           <Table sx={{ minWidth: 750 }} size="medium">
-            <EnhancedTableHead
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
+            <EnhancedTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(filteredUsers, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`
@@ -115,7 +113,14 @@ export default function UsersTable() {
                       <TableCell align="left">{row.name}</TableCell>
                       <TableCell align="left">{row.role}</TableCell>
                       <TableCell align="left">{row.email}</TableCell>
-                      <TableCell align="left"></TableCell>
+                      <TableCell align="left">
+                        <AddOrEditUser row={row} onUserAdd={handleUserCreation} />
+                        <Tooltip title="delete">
+                          <IconButton>
+                            <DeleteSweepIcon onClick={() => handleDelete(row)} />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
                     </TableRow>
                   )
                 })}
@@ -125,7 +130,7 @@ export default function UsersTable() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={filteredUsers.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

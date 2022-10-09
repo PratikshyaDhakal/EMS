@@ -1,10 +1,10 @@
 import React from "react"
-import { IconButton, TextField, Toolbar, Tooltip, Typography } from "@mui/material"
+import { TextField, Toolbar, Typography } from "@mui/material"
 import PropTypes from "prop-types"
-import AddBoxIcon from "@mui/icons-material/AddBox"
+import AddOrEditUser from "./AddOrEditUser"
 
 const EnhancedTableToolbar = (props) => {
-  const { onUserAdd } = props
+  const { onSearch, onUserAdd } = props
 
   return (
     <Toolbar
@@ -15,20 +15,17 @@ const EnhancedTableToolbar = (props) => {
     >
       <Typography sx={{ flex: "1 1 100%" }} variant="h6" id="tableTitle" component="div">
         Users
-        <Tooltip title="Add user">
-          <IconButton>
-            <AddBoxIcon color="error" onClick={onUserAdd} />
-          </IconButton>
-        </Tooltip>
+        <AddOrEditUser onUserAdd={onUserAdd} />
       </Typography>
 
-      <TextField variant="outlined" size="small" />
+      <TextField variant="outlined" size="small" onChange={onSearch} />
     </Toolbar>
   )
 }
 
 EnhancedTableToolbar.propTypes = {
-  onUserAdd: PropTypes.func,
+  onSearch: PropTypes.func.isRequired,
+  onUserAdd: PropTypes.func.isRequired,
 }
 
 export default EnhancedTableToolbar
